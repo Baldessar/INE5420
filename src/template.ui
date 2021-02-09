@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>605</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,10 +19,10 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>410</y>
-     <width>211</width>
-     <height>159</height>
+     <x>0</x>
+     <y>220</y>
+     <width>301</width>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -80,10 +80,10 @@
   <widget class="QWidget" name="drawArea" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>781</width>
-     <height>351</height>
+     <x>310</x>
+     <y>0</y>
+     <width>491</width>
+     <height>591</height>
     </rect>
    </property>
    <property name="palette">
@@ -535,17 +535,17 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>410</y>
-     <width>160</width>
-     <height>101</height>
+     <x>0</x>
+     <y>120</y>
+     <width>301</width>
+     <height>108</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Cordenadas</string>
+       <string>Coordinates</string>
       </property>
      </widget>
     </item>
@@ -554,7 +554,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Máximo</string>
+         <string>Max</string>
         </property>
        </widget>
       </item>
@@ -582,7 +582,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Mínimo</string>
+         <string>Min</string>
         </property>
        </widget>
       </item>
@@ -623,17 +623,17 @@
   <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>400</y>
-     <width>131</width>
-     <height>191</height>
+     <x>0</x>
+     <y>0</y>
+     <width>301</width>
+     <height>121</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Objetos</string>
+       <string>Objects</string>
       </property>
      </widget>
     </item>
@@ -645,29 +645,22 @@
   <widget class="QWidget" name="gridLayoutWidget_3">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>410</y>
-     <width>251</width>
-     <height>131</height>
+     <x>0</x>
+     <y>380</y>
+     <width>301</width>
+     <height>210</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_3">
-    <item row="2" column="2">
-     <widget class="QPlainTextEdit" name="shapePointsInput"/>
-    </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
-       <string>Pontos</string>
+       <string>Coords</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Nome</string>
-      </property>
-     </widget>
+    <item row="2" column="2">
+     <widget class="QPlainTextEdit" name="shapePointsInput"/>
     </item>
     <item row="4" column="2">
      <widget class="QPushButton" name="buttonAddShape">
@@ -680,6 +673,13 @@
      <widget class="QPushButton" name="buttonClean">
       <property name="text">
        <string>Limpar Tela</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Name</string>
       </property>
      </widget>
     </item>
