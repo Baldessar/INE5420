@@ -1,23 +1,28 @@
 import pathlib
 import sys
 import re
+
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtUiTools import QUiLoader
+import transforms as tr
+
 
 from draws import Line, Point, Wireframe
 
-def create_shape(name, text):
-  points = [point.split(',') for point in text.split(';')][:-1]
-  print(points)
+def create_shape(name, text, color='#ff0000'):
+  coords = [point.split(',') for point in text.split(';')][:-1]
+  print(coords)
 
-  if len(points) == 1:
-    [[x, y]] = points
-    return Point(name, float(x), float(y))
-  elif len(points) == 2:
-    [[x1, y1], [x2, y2]] = points
-    return Line(name, float(x1), float(y1), float(x2), float(y2))
-  else:
-    return Wireframe(name, [[float(x), float(y)] for [x, y] in points])
+  # if len(coords) == 1:
+  #   [[x, y]] = coords
+  #   return Point(name, float(x), float(y))
+  # elif len(coords) == 2:
+  #   [[x1, y1], [x2, y2]] = coords
+  #   return Line(name, float(x1), float(y1), float(x2), float(y2))
+  # else:
+  #   return Wireframe(name, [[float(x), float(y)] for [x, y] in coords])
+  return Wireframe(name, [[float(x), float(y)] for [x, y] in coords], color)
+
 
 class Window(QtWidgets.QWidget):
   def __init__(self):
@@ -42,29 +47,40 @@ class Window(QtWidgets.QWidget):
 
     self.gui.drawArea.installEventFilter(self)
 
+    # Move
     self.gui.buttonUp.clicked.connect(self.moveUp)
     self.gui.buttonDown.clicked.connect(self.moveDown)
     self.gui.buttonLeft.clicked.connect(self.moveLeft)
     self.gui.buttonRight.clicked.connect(self.moveRight)
+
+    # Add and clean shapes
     self.gui.buttonAddShape.clicked.connect(self.addShape)
-    self.gui.buttonClean.clicked.connect(self.cleanShapes)
+    # self.gui.buttonClean.clicked.connect(self.cleanShapes)
+
+    # Zoom
     self.gui.buttonZoomOut.clicked.connect(self.zoomOut)
     self.gui.buttonZoomIn.clicked.connect(self.zoomIn)
 
+    # Measure
     self.gui.spinBoxXMin.valueChanged.connect(self.setXMin)
     self.gui.spinBoxXMax.valueChanged.connect(self.setXMax)
     self.gui.spinBoxYMin.valueChanged.connect(self.setYMin)
     self.gui.spinBoxYMax.valueChanged.connect(self.setYMax)
-
     self.gui.spinBoxStep.valueChanged.connect(self.setStep)
 
+    # Rotation
+    self.gui.rotateButton.clicked.connect(self.rotate)
+    self.gui.scaleButton.clicked.connect(self.scale)
+    self.gui.translateButton.clicked.connect(self.translate)
+
+    self.shapes_map = {}
     self.shapes = []
 
     self.gui.show()
 
   def eventFilter(self, child, e):
     if self.gui.drawArea is child and e.type() == QtCore.QEvent.Paint:
-      painter = QtGui.QPainter(child)
+      painter = QtGui.QPainter(self.gui.drawArea)
 
       for shape in self.shapes:
         print(f"drawing {type(shape).__name__}")
@@ -135,13 +151,22 @@ class Window(QtWidgets.QWidget):
     return (1 - ((yw - self.ywMin) / (self.ywMax - self.ywMin))) * (self.yvpMax - self.yvpMin)
 
   def addShape(self, shape):
-    name = self.gui.shapeNameInput.toPlainText().strip()
-    points = self.gui.shapePointsInput.toPlainText().strip()
+    # name = self.gui.shapeNameInput.toPlainText().strip()
+    # coords = self.gui.shapeCoordsInput.toPlainText().strip()
 
-    if re.fullmatch(r"(\d+,\d+;)+", points):
-      shape = create_shape(name, points)
-      self.shapes.append(shape)
-      self.gui.listWidget.addItem(f"{name} - {type(shape).__name__}")
+    # if re.fullmatch(r"(\d+,\d+;)+", coords):
+    #   shape = create_shape(name, coords)
+    name = self.gui.shapeNameInput.text().strip()
+    coords = self.gui.shapeCoordsInput.text().strip()
+    color = self.gui.shapeColorInput.text().strip()
+
+    if name in self.shapes_map:
+      print("This name is already taken!")
+    elif re.fullmatch(r"(\d+,\d+;)+", coords):
+      new_shape = create_shape(name, coords, color)
+      self.shapes.append(new_shape)
+      self.shapes_map[name] = new_shape
+      self.gui.listWidget.addItem(f"{name} - {type(new_shape).__name__}")
       self.gui.drawArea.update()
     else:
       print("Invalid coordinates format.")
@@ -151,6 +176,56 @@ class Window(QtWidgets.QWidget):
     self.gui.listWidget.clear()
     self.gui.drawArea.update()
 
+  def rotate(self):
+    angle = float(self.gui.rotateAngleInput.text())
+    selected = self.gui.listWidget.currentItem()
+
+    if selected is not None:
+      selected_name = selected.text().split('-')[0].strip()
+      shape = self.shapes_map[selected_name]
+
+      if self.gui.radioButtonRotateCenter.isChecked():
+        tr.rotate_shape(shape, angle)
+      elif self.gui.radioBradioButtonRotateOrigin.isChecked():
+        tr.rotate_shape(shape, angle, 0, 0)
+      else:
+        point = self.gui.rotatePointInput.text().strip()
+        if re.fullmatch(r"\d+,\d+", point):
+          [x, y] = point.split(',')
+          tr.rotate_shape(shape, angle, float(x), float(y))
+        else:
+          print("Invalid point provided.")
+    else:
+      print("No object selected!")
+    self.gui.drawArea.update()
+
+  def scale(self):
+    sx = float(self.gui.scaleInputX.text())
+    sy = float(self.gui.scaleInputY.text())
+    selected = self.gui.listWidget.currentItem()
+
+    if selected is not None:
+      selected_name = selected.text().split('-')[0].strip()
+      shape = self.shapes_map[selected_name]
+
+      tr.scale_shape(shape, sx, sy)
+      self.gui.drawArea.update()
+    else:
+      print("No object selected!")
+
+  def translate(self):
+    dx = float(self.gui.translateInputX.text())
+    dy = float(self.gui.translateInputY.text())
+    selected = self.gui.listWidget.currentItem()
+
+    if selected is not None:
+      selected_name = selected.text().split('-')[0].strip()
+      shape = self.shapes_map[selected_name]
+
+      tr.translate_shape(shape, dx, dy)
+      self.gui.drawArea.update()
+    else:
+      print("No object selected!")
 
 if __name__ == "__main__":
   QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
