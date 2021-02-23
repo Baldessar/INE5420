@@ -55,7 +55,7 @@ class Window(QtWidgets.QWidget):
 
     # Add and clean shapes
     self.gui.buttonAddShape.clicked.connect(self.addShape)
-    # self.gui.buttonClean.clicked.connect(self.cleanShapes)
+    self.gui.buttonClean.clicked.connect(self.cleanShapes)
 
     # Zoom
     self.gui.buttonZoomOut.clicked.connect(self.zoomOut)
@@ -173,6 +173,7 @@ class Window(QtWidgets.QWidget):
 
   def cleanShapes(self):
     self.shapes = []
+    self.shapes_map = {}
     self.gui.listWidget.clear()
     self.gui.drawArea.update()
 
