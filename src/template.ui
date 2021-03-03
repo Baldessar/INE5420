@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1298</width>
-    <height>598</height>
+    <width>1079</width>
+    <height>641</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,20 +19,13 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>230</y>
+     <x>10</x>
+     <y>10</y>
      <width>295</width>
      <height>159</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QPushButton" name="buttonLeft">
-      <property name="text">
-       <string>Left</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QPushButton" name="buttonUp">
       <property name="text">
@@ -44,13 +37,6 @@
      <widget class="QPushButton" name="buttonRight">
       <property name="text">
        <string>Right</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QSpinBox" name="spinBoxStep">
-      <property name="value">
-       <number>20</number>
       </property>
      </widget>
     </item>
@@ -68,6 +54,20 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="1">
+     <widget class="QSpinBox" name="spinBoxStep">
+      <property name="value">
+       <number>20</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="buttonLeft">
+      <property name="text">
+       <string>Left</string>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="1">
      <widget class="QPushButton" name="buttonDown">
       <property name="text">
@@ -80,10 +80,10 @@
   <widget class="QWidget" name="drawArea" native="true">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>310</x>
      <y>10</y>
-     <width>851</width>
-     <height>431</height>
+     <width>741</width>
+     <height>381</height>
     </rect>
    </property>
    <property name="palette">
@@ -535,10 +535,10 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>430</y>
+     <x>10</x>
+     <y>180</y>
      <width>209</width>
-     <height>140</height>
+     <height>110</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -551,6 +551,13 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Máximo</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -568,24 +575,13 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Y</string>
+      <item row="3" column="2">
+       <widget class="QSpinBox" name="spinBoxYMax">
+        <property name="maximum">
+         <number>1000</number>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Máximo</string>
+        <property name="value">
+         <number>200</number>
         </property>
        </widget>
       </item>
@@ -596,13 +592,10 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QSpinBox" name="spinBoxYMax">
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>200</number>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>X</string>
         </property>
        </widget>
       </item>
@@ -616,20 +609,27 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
+  <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>10</x>
+     <y>400</y>
      <width>131</width>
      <height>191</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
@@ -645,10 +645,10 @@
   <widget class="QWidget" name="verticalLayoutWidget_3">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>0</y>
+     <x>150</x>
+     <y>400</y>
      <width>281</width>
-     <height>189</height>
+     <height>220</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -670,7 +670,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="shapeCoordsInput"/>
+     <widget class="QLineEdit" name="shapePointsInput"/>
     </item>
     <item>
      <widget class="QLabel" name="label_18">
@@ -689,7 +689,7 @@
       </property>
      </widget>
     </item>
-        <item>
+    <item>
      <widget class="QPushButton" name="buttonClean">
       <property name="text">
        <string>Limpar tela</string>
@@ -698,187 +698,225 @@
     </item>
    </layout>
   </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>480</y>
+     <width>401</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Rotacao</string>
+    </attribute>
+    <widget class="QWidget" name="gridLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>225</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="rotateAngleInput"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="rotateButton">
+        <property name="text">
+         <string>Rotacionar Selecionado</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Ângulo</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>0</y>
+       <width>151</width>
+       <height>114</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QRadioButton" name="radioButtonRotateCenter">
+        <property name="text">
+         <string>Centro do objeto</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioBradioButtonRotateOrigin">
+        <property name="text">
+         <string>Origem</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButtonRotatePoint">
+        <property name="text">
+         <string>Ponto arbitrátio</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="rotatePointInput"/>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Escala</string>
+    </attribute>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>191</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="1">
+       <widget class="QPushButton" name="scaleButton">
+        <property name="text">
+         <string>Escalar Selecionado</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="scaleInputX"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="scaleInputY"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="Translacao">
+    <attribute name="title">
+     <string>Translacao</string>
+    </attribute>
+    <widget class="QWidget" name="gridLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>191</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_7">
+      <item row="2" column="1">
+       <widget class="QPushButton" name="translateButton">
+        <property name="text">
+         <string>Transladar Selecionado</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="translateInputX"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="translateInputY"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
   <widget class="QLabel" name="label_17">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>450</y>
-     <width>61</width>
+     <x>490</x>
+     <y>460</y>
+     <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Rotação</string>
+    <string>Transformações</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="gridLayoutWidget_7">
-   <property name="geometry">
-    <rect>
-     <x>980</x>
-     <y>480</y>
-     <width>191</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout_8">
-    <item row="2" column="1">
-     <widget class="QPushButton" name="translateButton">
-      <property name="text">
-       <string>Transladar Selecionado</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="translateInputX"/>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="translateInputY"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_19">
-      <property name="text">
-       <string>X</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_20">
-      <property name="text">
-       <string>Y</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget_4">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>480</y>
-     <width>225</width>
-     <height>91</height>
+     <x>10</x>
+     <y>300</y>
+     <width>269</width>
+     <height>80</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_5">
     <item row="0" column="1">
-     <widget class="QLineEdit" name="rotateAngleInput"/>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="rotateButton">
-      <property name="text">
-       <string>Rotacionar Selecionado</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
      <widget class="QLabel" name="label_12">
       <property name="text">
-       <string>Ângulo</string>
+       <string>Angulo</string>
       </property>
      </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="gridLayoutWidget_5">
-   <property name="geometry">
-    <rect>
-     <x>770</x>
-     <y>480</y>
-     <width>191</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout_6">
-    <item row="2" column="1">
-     <widget class="QPushButton" name="scaleButton">
-      <property name="text">
-       <string>Escalar Selecionado</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="scaleInputX"/>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="scaleInputY"/>
+     <widget class="QLineEdit" name="rotateWindowAngleInput"/>
     </item>
     <item row="0" column="0">
-     <widget class="QLabel" name="label_13">
+     <widget class="QPushButton" name="rotateWindowLeftButton">
       <property name="text">
-       <string>X</string>
+       <string>Rotate Left</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_14">
+    <item row="0" column="2">
+     <widget class="QPushButton" name="rotateWindowRightButton">
       <property name="text">
-       <string>Y</string>
+       <string>Rotatate Right</string>
       </property>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_5">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>450</y>
-     <width>151</width>
-     <height>121</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_5">
-    <item>
-     <widget class="QRadioButton" name="radioButtonRotateCenter">
-      <property name="text">
-       <string>Centro do objeto</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="radioBradioButtonRotateOrigin">
-      <property name="text">
-       <string>Origem</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="radioButtonRotatePoint">
-      <property name="text">
-       <string>Ponto arbitrátio</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="rotatePointInput"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QLabel" name="label_21">
-   <property name="geometry">
-    <rect>
-     <x>980</x>
-     <y>460</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Translação</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_22">
-   <property name="geometry">
-    <rect>
-     <x>770</x>
-     <y>460</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Escala</string>
-   </property>
   </widget>
  </widget>
  <resources/>

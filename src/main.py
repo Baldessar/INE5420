@@ -2,6 +2,8 @@ import pathlib
 import sys
 import re
 
+import numpy as np
+
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtUiTools import QUiLoader
 import transforms as tr
@@ -10,18 +12,10 @@ import transforms as tr
 from draws import Line, Point, Wireframe
 
 def create_shape(name, text, color='#ff0000'):
-  coords = [point.split(',') for point in text.split(';')][:-1]
-  print(coords)
+  points = [point.split(',') for point in text.split(';')][:-1]
+  print(points)
 
-  # if len(coords) == 1:
-  #   [[x, y]] = coords
-  #   return Point(name, float(x), float(y))
-  # elif len(coords) == 2:
-  #   [[x1, y1], [x2, y2]] = coords
-  #   return Line(name, float(x1), float(y1), float(x2), float(y2))
-  # else:
-  #   return Wireframe(name, [[float(x), float(y)] for [x, y] in coords])
-  return Wireframe(name, [[float(x), float(y)] for [x, y] in coords], color)
+  return Wireframe(name, [[float(x), float(y)] for [x, y] in points], color)
 
 
 class Window(QtWidgets.QWidget):
@@ -42,6 +36,9 @@ class Window(QtWidgets.QWidget):
     self.xvpMax = self.gui.drawArea.width()
     self.yvpMin = 0
     self.yvpMax = self.gui.drawArea.height()
+
+    self.rotation = 0
+    self.translation = None
 
     self.step = 20
 
@@ -71,7 +68,9 @@ class Window(QtWidgets.QWidget):
     # Rotation
     self.gui.rotateButton.clicked.connect(self.rotate)
     self.gui.scaleButton.clicked.connect(self.scale)
-    self.gui.translateButton.clicked.connect(self.translate)
+    # self.gui.translateButton.clicked.connect(self.translate)
+    self.gui.rotateWindowLeftButton.clicked.connect(self.rotateWindowLeft)
+    self.gui.rotateWindowRightButton.clicked.connect(self.rotateWindowRight)
 
     self.shapes_map = {}
     self.shapes = []
@@ -81,6 +80,7 @@ class Window(QtWidgets.QWidget):
   def eventFilter(self, child, e):
     if self.gui.drawArea is child and e.type() == QtCore.QEvent.Paint:
       painter = QtGui.QPainter(self.gui.drawArea)
+      self.generate_normalized()
 
       for shape in self.shapes:
         print(f"drawing {type(shape).__name__}")
@@ -90,6 +90,20 @@ class Window(QtWidgets.QWidget):
 
       return True
     return False
+
+
+  def rotateWindowLeft(self):
+    self.rotation -= float(self.gui.rotateWindowAngleInput.text())
+    self.gui.drawArea.update()
+
+
+  def rotateWindowRight(self):
+    self.rotation += float(self.gui.rotateWindowAngleInput.text())
+    self.gui.drawArea.update()
+
+
+  def rotateWindow(self):
+    self.transformations = self.transformations.dot(tr.get_rotation_matrix(0.5, 0, 0))
 
   def zoomIn(self):
     self.ywMin *= (1 - self.step/100)
@@ -122,48 +136,85 @@ class Window(QtWidgets.QWidget):
     self.gui.drawArea.update()
 
   def moveUp(self):
-    self.ywMin += self.step
-    self.ywMax += self.step
+    transformation = tr.get_translation_matrix(0, -self.step)
+    if self.translation is None:
+      self.translation = transformation
+    else:
+      self.translation = self.translation.dot(transformation)
+    # self.ywMin += self.step
+    # self.ywMax += self.step
     self.gui.drawArea.update()
 
   def moveDown(self):
-    self.ywMin -= self.step
-    self.ywMax -= self.step
+    # self.ywMin -= self.step
+    # self.ywMax -= self.step
+    transformation = tr.get_translation_matrix(0, self.step)
+    if self.translation is None:
+      self.translation = transformation
+    else:
+      self.translation = self.translation.dot(transformation)
     self.gui.drawArea.update()
 
   def moveLeft(self):
-    self.xwMin -= self.step
-    self.xwMax -= self.step
+    # self.xwMin -= self.step
+    # self.xwMax -= self.step
+    transformation = tr.get_translation_matrix(self.step, 0)
+    if self.translation is None:
+      self.translation = transformation
+    else:
+      self.translation = self.translation.dot(transformation)
     self.gui.drawArea.update()
 
   def moveRight(self):
-    self.xwMin += self.step
-    self.xwMax += self.step
+    # self.xwMin += self.step
+    # self.xwMax += self.step
+    transformation = tr.get_translation_matrix(-self.step, 0)
+    if self.translation is None:
+      self.translation = transformation
+    else:
+      self.translation = self.translation.dot(transformation)
     self.gui.drawArea.update()
 
   def setStep(self, value):
     self.step = value
 
+  def generate_normalized(self):
+    size_x = (self.xwMax - self.xwMin) / 2
+    size_y = (self.ywMax - self.ywMin) / 2
+    wxc = self.xwMin + size_x
+    wyc = self.ywMin + size_y
+
+    translate_to_center = tr.get_translation_matrix(-wxc, -wyc)
+    rotate = tr.get_rotation_matrix(-self.rotation)
+    normalize = tr.get_scale_matrix(1/size_x, 1/size_y)
+
+    transformation = translate_to_center.dot(rotate)
+
+    if self.translation is not None:
+      transformation = transformation.dot(self.translation)
+
+    transformation = transformation.dot(normalize)
+
+    for shape in self.shapes:
+      shape.set_normalized_points(transformation)
+
   def transformX(self, xw):
-    return ((xw - self.xwMin) / (self.xwMax - self.xwMin)) * (self.xvpMax - self.yvpMin)
+    # return ((xw - self.xwMin) / (self.xwMax - self.xwMin)) * (self.xvpMax - self.yvpMin)
+    return ((xw + 1) / 2) * (self.xvpMax - self.yvpMin)
 
   def transformY(self, yw):
-    return (1 - ((yw - self.ywMin) / (self.ywMax - self.ywMin))) * (self.yvpMax - self.yvpMin)
+    # return (1 - ((yw - self.ywMin) / (self.ywMax - self.ywMin))) * (self.yvpMax - self.yvpMin)
+    return (1 - ((yw + 1) / 2)) * (self.yvpMax - self.yvpMin)
 
   def addShape(self, shape):
-    # name = self.gui.shapeNameInput.toPlainText().strip()
-    # coords = self.gui.shapeCoordsInput.toPlainText().strip()
-
-    # if re.fullmatch(r"(\d+,\d+;)+", coords):
-    #   shape = create_shape(name, coords)
     name = self.gui.shapeNameInput.text().strip()
-    coords = self.gui.shapeCoordsInput.text().strip()
+    points = self.gui.shapePointsInput.text().strip()
     color = self.gui.shapeColorInput.text().strip()
 
     if name in self.shapes_map:
       print("This name is already taken!")
-    elif re.fullmatch(r"(\d+,\d+;)+", coords):
-      new_shape = create_shape(name, coords, color)
+    elif re.fullmatch(r"(\d+,\d+;)+", points):
+      new_shape = create_shape(name, points, color)
       self.shapes.append(new_shape)
       self.shapes_map[name] = new_shape
       self.gui.listWidget.addItem(f"{name} - {type(new_shape).__name__}")

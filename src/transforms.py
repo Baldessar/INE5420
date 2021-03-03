@@ -2,9 +2,16 @@ import numpy as np
 import statistics
 import math
 
-def transform(shape, matrix):
-  coords = [np.array([x, y, 1]).dot(matrix).tolist() for [x, y] in shape.coords]
-  shape.coords = [[x, y] for [x, y, _] in coords]
+# def transform(shape, matrix):
+#   coords = [np.array([x, y, 1]).dot(matrix).tolist() for [x, y] in shape.coords]
+#   shape.coords = [[x, y] for [x, y, _] in coords]
+
+def transform_shape(shape, matrix):
+  shape.points = transform_points(shape.points, matrix)
+
+def transform_points(points, matrix):
+  points = [np.array([x, y, 1]).dot(matrix).tolist() for [x, y] in points]
+  return [[x, y] for [x, y, _] in points]
 
 def center(shape):
   cx = statistics.mean([x for [x, y] in shape.coords])
@@ -12,20 +19,22 @@ def center(shape):
 
   return (cx, cy)
 
-def get_rotation_matrix(radias, cx, cy):
+def get_composite_rotation_matrix(angle, cx, cy):
   translate_to_origin = get_translation_matrix(-cx, -cy)
+  rotate = get_rotation_matrix(angle)
+  translate_back = get_translation_matrix(cx, cy)
 
-  sine = math.sin(radias)
-  cosine = math.cos(radias)
-  rotate = np.array([
+  return translate_to_origin.dot(rotate).dot(translate_back)
+
+def get_rotation_matrix(angle):
+  radians = angle * (math.pi/180)
+  sine = math.sin(radians)
+  cosine = math.cos(radians)
+  return np.array([
     [cosine, -sine, 0],
     [sine, cosine, 0],
     [0, 0, 1]
   ])
-
-  translate_back = get_translation_matrix(cx, cy)
-
-  return translate_to_origin.dot(rotate).dot(translate_back)
 
 def get_translation_matrix(dx, dy):
   return np.array([
@@ -46,11 +55,10 @@ def rotate_shape(shape, angle, x = None, y = None):
   if cx == None or cy == None:
     [cx, cy] = center(shape)
 
-  angle_in_radians = angle * (math.pi/180)
+  rotate_matrix = get_composite_rotation_matrix(angle, cx, cy)
 
-  rotate_matrix = get_rotation_matrix(angle_in_radians, cx, cy)
 
-  transform(shape, rotate_matrix)
+  transform_shape(shape, rotate_matrix)
 
 def scale_shape(shape, sx, sy):
   [cx, cy] = center(shape)
@@ -61,7 +69,7 @@ def scale_shape(shape, sx, sy):
 
   scale_relative_origin_matrix = translate_to_origin.dot(scale_matrix).dot(translate_back)
 
-  transform(shape, scale_relative_origin_matrix)
+  transform_shape(shape, scale_relative_origin_matrix)
 
 def translate_shape(shape, dx, dy):
-  transform(shape, get_translation_matrix(dx, dy))
+  transform_shape(shape, get_translation_matrix(dx, dy))
