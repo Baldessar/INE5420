@@ -10,6 +10,7 @@ import transforms as tr
 
 
 from draws import Line, Point, Wireframe
+import loader
 
 def create_shape(name, text, color='#ff0000'):
   points = [point.split(',') for point in text.split(';')][:-1]
@@ -53,6 +54,7 @@ class Window(QtWidgets.QWidget):
     # Add and clean shapes
     self.gui.buttonAddShape.clicked.connect(self.addShape)
     self.gui.buttonClean.clicked.connect(self.cleanShapes)
+    self.gui.exportOBJButton.clicked.connect(self.export_obj)
 
     # Zoom
     self.gui.buttonZoomOut.clicked.connect(self.zoomOut)
@@ -278,6 +280,9 @@ class Window(QtWidgets.QWidget):
       self.gui.drawArea.update()
     else:
       print("No object selected!")
+
+  def export_obj(self):
+    loader.save(self)
 
 if __name__ == "__main__":
   QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)

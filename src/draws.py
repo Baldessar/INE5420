@@ -4,6 +4,7 @@ import transforms as tr
 class Line():
   def __init__(self, name, x1, y1, x2, y2, color):
     self.points = [(x1, y1), (x2, y2)]
+    self.name = name
     self.color = color if color is not None and color != '' else '#000000'
     self.x2 = x2
     self.y2 = y2
@@ -24,6 +25,7 @@ class Line():
 class Point():
   def __init__(self, name, x, y, color):
     self.points = [(x, y)]
+    self.name = name
     self.color = color if color is not None and color != '' else '#000000'
 
   def draw(self, painter, transformX, transformY):
@@ -38,6 +40,7 @@ class Point():
 class Wireframe():
   def __init__(self, name, points, color):
     self.points = points
+    self.name = name
     self.normalized_points = points
     self.color = color if color is not None and color != '' else '#000000'
 

@@ -696,6 +696,21 @@
       </property>
      </widget>
     </item>
+    <item>
+        <widget class="QPushButton" name="exportOBJButton">
+            <property name="geometry">
+                <rect>
+                <x>540</x>
+                <y>360</y>
+                <width>93</width>
+                <height>28</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Export OBJ</string>
+            </property>
+        </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QTabWidget" name="tabWidget">
