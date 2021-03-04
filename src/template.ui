@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1079</width>
-    <height>641</height>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -648,7 +648,7 @@
      <x>150</x>
      <y>400</y>
      <width>281</width>
-     <height>220</height>
+     <height>305</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -683,6 +683,16 @@
      <widget class="QLineEdit" name="shapeColorInput"/>
     </item>
     <item>
+     <widget class="QLabel" name="label_21">
+      <property name="text">
+       <string>Nome de arquivo OBJ</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="shapeOBJInput"/>
+    </item>
+    <item>
      <widget class="QPushButton" name="buttonAddShape">
       <property name="text">
        <string>Adicionar Objeto</string>
@@ -696,28 +706,13 @@
       </property>
      </widget>
     </item>
-    <item>
-        <widget class="QPushButton" name="exportOBJButton">
-            <property name="geometry">
-                <rect>
-                <x>540</x>
-                <y>360</y>
-                <width>93</width>
-                <height>28</height>
-                </rect>
-            </property>
-            <property name="text">
-                <string>Export OBJ</string>
-            </property>
-        </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>480</y>
+     <x>450</x>
+     <y>420</y>
      <width>401</width>
      <height>141</height>
     </rect>
@@ -887,8 +882,8 @@
   <widget class="QLabel" name="label_17">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>460</y>
+     <x>460</x>
+     <y>400</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -932,6 +927,19 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="exportOBJButton">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>570</y>
+     <width>279</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Export OBJ</string>
+   </property>
   </widget>
  </widget>
  <resources/>
