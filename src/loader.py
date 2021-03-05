@@ -1,6 +1,7 @@
 import os
 
 from draws import Line, Point, Wireframe
+from collections import defaultdict
 
 def encode_point(p):
   [x, y] = p
@@ -42,7 +43,7 @@ def encode(shapes, xwmin, ywmin, xwmax, ywmax):
       for i in range(n):
         vertices_txt += f'v {encode_point(obj.points[i])}\n'
         indexes += f'{idx + i} '
-      indexes += f'{idx}'
+      # indexes += f'{idx}'
 
       objects_txt += f'l {indexes}\n'
       idx += n
@@ -59,3 +60,34 @@ def save(window):
       window.ywMax
     )
     file.write(contents)
+
+def load_file(file):
+  verts = defaultdict(list)
+  shapes = defaultdict(list)
+  current_shape = None
+
+  with open(file) as file:
+    lines = file.read().splitlines()
+
+    for idx, line in enumerate(lines):
+      if not line.strip():
+          continue
+
+      words = line.strip().split(' ', 1)
+      if '#' == words[0] or len(words) < 2:
+        continue
+
+      [prefix, value] = words
+
+      if prefix == 'v':
+        verts[idx] = value.split()
+
+      elif prefix == 'o':
+        current_shape = value
+        shapes[value]
+
+      elif prefix == 'l' or prefix == 'w':
+        for idx in value.split():
+          shapes[current_shape].append(verts[int(idx) - 1])
+
+    return shapes

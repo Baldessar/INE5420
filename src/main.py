@@ -221,6 +221,25 @@ class Window(QtWidgets.QWidget):
       self.shapes_map[name] = new_shape
       self.gui.listWidget.addItem(f"{name} - {type(new_shape).__name__}")
       self.gui.drawArea.update()
+    elif self.gui.shapeOBJInput.text().strip() != '':
+      name = self.gui.shapeOBJInput.text().strip()
+      shapes = loader.load_file(f"{name}.obj")
+
+      for shape in shapes:
+        if shape == 'window':
+          self.xwMin = int(shapes[shape][0][0])
+          self.xwMax = int(shapes[shape][1][0])
+          self.ywMin = int(shapes[shape][0][1])
+          self.ywMax = int(shapes[shape][1][1])
+          continue
+        points_text = ''
+        for point in shapes[shape]:
+          points_text += ','.join(point[0:2]) + ';'
+        new_shape = create_shape(shape, points_text, 'black')
+        self.shapes.append(new_shape)
+        self.shapes_map[new_shape.name] = new_shape
+        self.gui.listWidget.addItem(f"{new_shape.name} - {type(new_shape).__name__}")
+      self.gui.drawArea.update()
     else:
       print("Invalid coordinates format.")
 
