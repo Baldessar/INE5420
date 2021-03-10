@@ -16,8 +16,14 @@ def create_shape(name, text, color='#ff0000'):
   points = [point.split(',') for point in text.split(';')][:-1]
   print(points)
 
-  return Wireframe(name, [[float(x), float(y)] for [x, y] in points], color)
-
+  if len(points) == 1:
+      [(x0, y0)] = points
+      return Point(name, float(x0), float(y0), color)
+  elif len(points) == 2:
+    [(x0, y0), (x1, y1)] = points
+    return Line(name, float(x0), float(y0), float(x1), float(y1), color)
+  else:
+    return Wireframe(name, [[float(x), float(y)] for [x, y] in points], color)
 
 class Window(QtWidgets.QWidget):
   def __init__(self):
@@ -33,10 +39,10 @@ class Window(QtWidgets.QWidget):
     self.ywMin = 0
     self.ywMax = 200
 
-    self.xvpMin = 0
-    self.xvpMax = self.gui.drawArea.width()
-    self.yvpMin = 0
-    self.yvpMax = self.gui.drawArea.height()
+    self.xvpMin = 20
+    self.xvpMax = self.gui.drawArea.width() - 80
+    self.yvpMin = 20
+    self.yvpMax = self.gui.drawArea.height() - 80
 
     self.rotation = 0
     self.translation = None
@@ -70,7 +76,8 @@ class Window(QtWidgets.QWidget):
     # Rotation
     self.gui.rotateButton.clicked.connect(self.rotate)
     self.gui.scaleButton.clicked.connect(self.scale)
-    # self.gui.translateButton.clicked.connect(self.translate)
+    self.gui.translateButton.clicked.connect(self.translate)
+
     self.gui.rotateWindowLeftButton.clicked.connect(self.rotateWindowLeft)
     self.gui.rotateWindowRightButton.clicked.connect(self.rotateWindowRight)
 
@@ -82,6 +89,11 @@ class Window(QtWidgets.QWidget):
   def eventFilter(self, child, e):
     if self.gui.drawArea is child and e.type() == QtCore.QEvent.Paint:
       painter = QtGui.QPainter(self.gui.drawArea)
+
+      painter.setPen('red')
+
+      painter.drawRect(self.xvpMin, self.yvpMin, self.xvpMax - 20, self.yvpMax - 20)
+
       self.generate_normalized()
 
       for shape in self.shapes:
@@ -105,7 +117,7 @@ class Window(QtWidgets.QWidget):
 
 
   def rotateWindow(self):
-    self.transformations = self.transformations.dot(tr.get_rotation_matrix(0.5, 0, 0))
+    self.transformations = self.transformations.dot(tr.get_composite_rotation_matrix(0.5, 0, 0))
 
   def zoomIn(self):
     self.ywMin *= (1 - self.step/100)
@@ -202,11 +214,11 @@ class Window(QtWidgets.QWidget):
 
   def transformX(self, xw):
     # return ((xw - self.xwMin) / (self.xwMax - self.xwMin)) * (self.xvpMax - self.yvpMin)
-    return ((xw + 1) / 2) * (self.xvpMax - self.yvpMin)
+    return ((xw + 1) / 2) * (self.xvpMax - self.yvpMin) + 20
 
   def transformY(self, yw):
     # return (1 - ((yw - self.ywMin) / (self.ywMax - self.ywMin))) * (self.yvpMax - self.yvpMin)
-    return (1 - ((yw + 1) / 2)) * (self.yvpMax - self.yvpMin)
+    return (1 - ((yw + 1) / 2)) * (self.yvpMax - self.yvpMin) + 20
 
   def addShape(self, shape):
     name = self.gui.shapeNameInput.text().strip()

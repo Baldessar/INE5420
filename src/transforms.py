@@ -14,8 +14,8 @@ def transform_points(points, matrix):
   return [[x, y] for [x, y, _] in points]
 
 def center(shape):
-  cx = statistics.mean([x for [x, y] in shape.coords])
-  cy = statistics.mean([y for [x, y] in shape.coords])
+  cx = statistics.mean([x for [x, y] in shape.points])
+  cy = statistics.mean([y for [x, y] in shape.points])
 
   return (cx, cy)
 
