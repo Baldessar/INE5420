@@ -9,21 +9,8 @@ from PySide6.QtUiTools import QUiLoader
 import transforms as tr
 
 
-from draws import Line, Point, Wireframe
+from draws import Line, Point, Wireframe, Curve
 import loader
-
-def create_shape(name, text, color='#ff0000'):
-  points = [point.split(',') for point in text.split(';')][:-1]
-  print(points)
-
-  if len(points) == 1:
-      [(x0, y0)] = points
-      return Point(name, float(x0), float(y0), color)
-  elif len(points) == 2:
-    [(x0, y0), (x1, y1)] = points
-    return Line(name, float(x0), float(y0), float(x1), float(y1), color)
-  else:
-    return Wireframe(name, [[float(x), float(y)] for [x, y] in points], color)
 
 class Window(QtWidgets.QWidget):
   def __init__(self):
@@ -85,6 +72,30 @@ class Window(QtWidgets.QWidget):
     self.shapes = []
 
     self.gui.show()
+
+
+
+  def create_shape(self, name, text, color='#ff0000'):
+    points = [point.split(',') for point in text.split(';')][:-1]
+    print(points)
+
+    if self.gui.checkBoxBezier.isChecked():
+      if len(points) != 4:
+        print("Invalid control points for curve")
+        return None
+      else:
+        return Curve(name, [[float(x), float(y)] for [x, y] in points], color)
+
+
+    if len(points) == 1:
+        [(x0, y0)] = points
+        return Point(name, float(x0), float(y0), color)
+    elif len(points) == 2:
+      [(x0, y0), (x1, y1)] = points
+      return Line(name, float(x0), float(y0), float(x1), float(y1), color)
+    else:
+      return Wireframe(name, [[float(x), float(y)] for [x, y] in points], color)
+
 
   def eventFilter(self, child, e):
     if self.gui.drawArea is child and e.type() == QtCore.QEvent.Paint:
@@ -227,12 +238,13 @@ class Window(QtWidgets.QWidget):
 
     if name in self.shapes_map:
       print("This name is already taken!")
-    elif re.fullmatch(r"(\d+,\d+;)+", points):
-      new_shape = create_shape(name, points, color)
-      self.shapes.append(new_shape)
-      self.shapes_map[name] = new_shape
-      self.gui.listWidget.addItem(f"{name} - {type(new_shape).__name__}")
-      self.gui.drawArea.update()
+    elif re.fullmatch(r"(-?\d+,-?\d+;)+", points):
+      shape = self.create_shape(name, points, color)
+      if shape is not None:
+        self.shapes.append(shape)
+        self.shapes_map[name] = shape
+        self.gui.listWidget.addItem(f"{name} - {type(shape).__name__}")
+        self.gui.drawArea.update()
     elif self.gui.shapeOBJInput.text().strip() != '':
       name = self.gui.shapeOBJInput.text().strip()
       shapes = loader.load_file(f"{name}.obj")
